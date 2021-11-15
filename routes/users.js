@@ -11,6 +11,8 @@ const usersController = require('../controllers/users');
 const User = require('../models/User');
 router.post('/register', usersController.postSignup);
 
+router.post('/login', usersController.postLogin);
+
 
 
 

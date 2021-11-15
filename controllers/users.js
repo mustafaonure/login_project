@@ -21,6 +21,27 @@ exports.postSignup = async (req,res,next)=>{
          next(errorToThrow);
     }
 };
+exports.postLogin = async (req,res,next)=>{
+    //getting user data from request body
+    const {tc, password} = req.body;
+    try {
+        const user = new User({tc, password});
+        const result = await user.loginUser();
+        res.send(user);
+    } catch (error) {
+        const errorToThrow = new Error();
+        switch (error?.code) {
+            case '23505':
+                errorToThrow.message = 'User already exists';
+                errorToThrow.statusCode = 403;
+                break;
+            default:
+                errorToThrow.statusCode = 500;
+        }
+         //pass error to next()
+         next(errorToThrow);
+    }
+};
 
 
 

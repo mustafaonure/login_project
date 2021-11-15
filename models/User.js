@@ -27,21 +27,29 @@ User.prototype.createUser = async function() {
         throw error;
     }
 };
-User.prototype.loginUser = (request, response) => {
-    const userReq = request.body
-    let user
-  
-    findUser(userReq)
-      .then(foundUser => {
-        user = foundUser
-        return checkPassword(userReq.password, foundUser)
-      })
-      .then((res) => createToken())
-      .then(token => updateUserToken(token, user))
-      .then(() => {
-        delete user.password_digest
-        response.status(200).json(user)
-      })
-      .catch((err) => console.error(err))
-  }
+User.prototype.loginUser = async function() {
+    try {
+        const { rows } = await db.query(
+            `SELECT * FROM users WHERE tc= $1 `,
+            [this.tc]
+        );
+        return rows; 
+    } catch (error) {
+        throw error;
+    }
+};
+
+//     findUser(userReq)
+//       .then(foundUser => {
+//         user = foundUser
+//         return checkPassword(userReq.password, foundUser)
+//       })
+//       .then((res) => createToken())
+//       .then(token => updateUserToken(token, user))
+//       .then(() => {
+//         delete user.password_digest
+//         response.status(200).json(user)
+//       })
+//       .catch((err) => console.error(err))
+//   }
 module.exports = User;
