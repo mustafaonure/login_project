@@ -1,42 +1,37 @@
-const db = require('../db');
+const { json } = require("body-parser");
+const db = require("../db");
+const { hash } = require("../helpers/Hash");
 
 //User constructor
-
-function User({
-    name,
-    surname,
-    tc,
-    password
-}) {
-    this.name = name;
-    this.surname = surname;
-    this.tc = tc ;
-    this.password = password;
-};
+function User({ name, surname, tc, password }) {
+  this.name = name;
+  this.surname = surname;
+  this.tc = tc;
+  this.password = password;
+}
 
 // add a createUser method to the prototype
-User.prototype.createUser = async function() {
-    try {
-        const { rows } = await db.query(
-            `INSERT INTO users(name, surname, tc, password) 
+User.prototype.createUser = async function () {
+  try {
+    const { rows } = await db.query(
+      `INSERT INTO users(name, surname, tc, password_hash) 
             VALUES ($1, $2, $3, $4)`,
-            [this.name, this.surname, this.tc, this.password]
-        );
-        return rows; 
-    } catch (error) {
-        throw error;
-    }
+      [this.name, this.surname, this.tc, hash(this.password)]
+    );
+    return rows;
+  } catch (error) {
+    throw error;
+  }
 };
-User.prototype.loginUser = async function() {
-    try {
-        const { rows } = await db.query(
-            `SELECT * FROM users WHERE tc= $1 `,
-            [this.tc]
-        );
-        return rows; 
-    } catch (error) {
-        throw error;
-    }
+User.prototype.loginUser = async function () {
+  try {
+    const { rows } = await db.query(`SELECT * FROM users WHERE tc= $1 `, [
+      this.tc,
+    ]);
+    return rows;
+  } catch (error) {
+    throw error;
+  }
 };
 
 //     findUser(userReq)
