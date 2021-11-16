@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
+
+
+
 //Login Page
-router.get('/login',(req,res)=> res.render('login'));
+router.get('/login',(_req,res)=> res.render('login'));
 //Register Page
-router.get('/register',(req,res)=> res.render('register'));
+router.get('/register',(_req,res)=> res.render('register'));
 
 //Register Handle
 
@@ -12,7 +15,6 @@ const User = require('../models/User');
 router.post('/register', usersController.postSignup);
 
 router.post('/login', usersController.postLogin);
-
 
 
 
